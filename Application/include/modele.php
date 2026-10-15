@@ -17,8 +17,8 @@
 class Modele{   		
       	private static $serveur = 'mysql:host=localhost';
       	private static $bdd = 'dbname=getcet';   		
-      	private static $user = 'sio' ;    		
-      	private static $mdp = 'slam' ;	
+      	private static $user = 'root' ;    		
+      	private static $mdp = '' ;	
 	private static $monPdo;
 	private static $monModele = null;
 /**
@@ -52,7 +52,8 @@ class Modele{
  * @return $verif
 */
 	public function testConnexionEmploye($login, $mdp){
-		$req = "select count(*) as nb from employe where employe.login='$login' and employe.mdp='$mdp'";
+		$mdp_chiffree = md5($mdp);
+		$req = "select count(*) as nb from employe where employe.login='$login' and employe.mdp='$mdp_chiffree'";
 		$rs = Modele::$monPdo->query($req);
 		$ligne = $rs->fetch();
 		$res = $ligne['nb'];
@@ -66,16 +67,21 @@ class Modele{
  * @param $mdp
  * @return $verif
 */
-	public function testMdp($login, $mdp){
-		$req = "select count(*) as nb from employe where employe.login='$login' and employe.mdp='$mdp'";
+	public function testMdp($idEmploye, $ancien_mdp){
+		$mdp_chiffree = md5($ancien_mdp);
+		$req = "SELECT count(*) as nb 
+				FROM employe 
+				WHERE idEmploye='$idEmploye' 
+				AND mdp='$mdp_chiffree';"; //si les mdp ne sont pas chiffree il faut mettre $ancien_mdp
 		$rs = Modele::$monPdo->query($req);
 		$ligne = $rs->fetch();
 		$res = $ligne['nb'];
 		return $res;
 	}
 
-	public function UpdateMdp($ancien_mdp, $nouveau_mdp){
-		$req = "UPDATE employe SET $ancien_mdp = $nouveau_mdp;";
+	public function UpdateMdp($idEmploye, $nouveau_mdp){
+		$mdp_chiffree = md5($nouveau_mdp);
+		$req = "UPDATE employe SET mdp = '$mdp_chiffree' WHERE idEmploye='$idEmploye';";
 		$rs = Modele::$monPdo->query($req);
 		return $rs;
 	}
@@ -88,7 +94,7 @@ class Modele{
  * @return l'idEmploye, le nom et le prénom sous la forme d'un tableau associatif 
 */
 	public function getInfosEmploye($login, $mdp){
-		$req = "select employe.idEmploye as id, employe.nom as nom, employe.prenom as prenom from employe 
+		$req = "SELECT employe.idEmploye AS id, employe.nom as nom, employe.prenom as prenom from employe 
 		where employe.login='$login' and employe.mdp='$mdp'";
 		$rs = Modele::$monPdo->query($req);
 		$ligne = $rs->fetch();
@@ -122,6 +128,20 @@ class Modele{
 		return $lesLignes; 
 	}
 	
+
+
+	public function afficheEtat(){
+		$req = "SELECT * FROM etatarticle;";
+		$stmt= Modele::$monPdo->query($req);
+		$lignes = $stmt->fetchAll();
+		return $lignes;
+	}
+
+	public function ajouterProduit($ref, $dateP, $idEtat){
+		$req = "INSERT INTO article (refProduit, datePeremption, idEtat) VALUES ? , ? , ?;";
+		$res = Modele::$monPdo->query($req);
+		return "oki";
+	}
 /**
  * Supprimer l'acheteur dont l'id est passé en argument
  

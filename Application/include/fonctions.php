@@ -153,6 +153,13 @@ function ajouterErreur($msg){
    $_REQUEST['erreurs'][]=$msg;
 }
 
+function ajouterSucces($msg){
+   if (! isset($_REQUEST['succes'])){
+      $_REQUEST['succes'] = array();
+   }
+   $_REQUEST['succes'][] = $msg;
+}
+
 /**
  * Retoune le nombre de lignes du tableau des erreurs 
  

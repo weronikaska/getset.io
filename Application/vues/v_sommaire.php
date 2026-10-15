@@ -7,19 +7,32 @@
         <ul id="menuList">
 			<li >
 				  Employé : <?php echo $_SESSION['prenom']."  ".$_SESSION['nom']  ?><br/ >
-			</li>
+               <!--changer employée en variable qui change -->
+            </li>
 			<li>------------------------------------------</li>
+      <!-- menu dispo pour chaque role -->
 			<li class="smenu">
               <a href="index.php?uc=profilEmploye&action=profil" title="Mon Profil">Mon Profil</a>
            </li>
+           <li class="smenu">
+              <a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">Se déconnecter</a>
+           </li>
+
+      <!-- dispo pour secrétaire -->
            <li class="smenu">
               <a href="index.php?uc=listeCommerces&action=gererCommerces" title="Gestion des commerces">Gestion des commerces</a>
            </li>
            <li class="smenu">
               <a href="index.php?uc=listeAcheteurs&action=gererAcheteurs" title="Gestion des acheteurs">Gestion des acheteurs</a>
            </li>
-			<li class="smenu">
-              <a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">Se déconnecter</a>
+			
+   <!--vue sommaire du maire-->
+           <li class="smenu">
+              <a href="index.php?uc=gererProduit&action=formulaireAjout" title="ajouter un produit">Ajouter un produit</a>
+           </li>
+
+           <li class="smenu">
+              <a href="index.php?uc=gererProduit&action=formulaireAjout" title="ajouter un produit">enregistrement des dons </a>
            </li>
          </ul>
         

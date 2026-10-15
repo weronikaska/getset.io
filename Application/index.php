@@ -36,6 +36,12 @@ switch($uc){
 		include("controleurs/c_modificationMDP.php");
 		break;
 	}
+	
+	case 'gererProduit' :{
+		include("controleurs/c_gererProduit.php");
+		break;
+	}
+
 }
 include("vues/v_pied.php") ;
 ?>
