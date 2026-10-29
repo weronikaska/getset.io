@@ -10,26 +10,19 @@
 			<input id="refProduit" type="text" name="refProduit" size="30" maxlength="45">
 		</p>
 		<p>
-			<label for="dateP">Date de péremption  </label>
-			<input id="dateP"  type="text"  name="dateP" size="30" maxlength="45">
+			<label for="desProduit">designation du produit </label>
+			<input id="desProduit" type="text" name="desProduit" size="30" maxlength="45">
+		</p>
+        <p>
+			<label for="qteStock">quantité en stock du produit </label>
+			<input id="qteStock" type="number" name="qteStock" size="30" maxlength="45">
+		</p>
+        <p>
+			<label for="prixProduit">prix du produit </label>
+			<input id="prixProduit" type="number" step="0.01" min="0" name="prixProduit" size="30" > <p>€</p>
 		</p>
 
-        <p>
-			<label for="etatP">Etat du produit </label>
-             <select name="etatP" id="etatP">
-                <?php 
-                    foreach($lesEtats as $etat){
-                ?>
-
-                <option value="<?php echo $etat['id']; ?>">
-                    <?php echo $etat['libelle']; ?>
-                </option>
-
-                <?php 
-                    }
-                ?>
-            </select>
-      </p>
+       
      <input type="submit" value="ajouterProduit" name="ajouterProduit"/>
 
 </form>

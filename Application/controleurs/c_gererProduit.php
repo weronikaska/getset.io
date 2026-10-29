@@ -6,15 +6,28 @@
 
     switch($action){
         case'formulaireAjout':{
-            $lesEtats = $pdo->afficheEtat();
             include("vues/v_ajoutDeProduit.php");
             break;
         }
+
         case'ajouterProduit':{
             $ref = $_POST['refProduit'];
-            $dateP =$_POST['datePeremption'];
-            $idEtat = $_POST['etatP'];
-            $pdo->ajouterProduit($ref, $dateP, $idEtat );
+            $desProduit = $_POST['desProduit'];
+            $qteStock = $_POST['qteStock'];
+            $prixProduit = $_POST['prixProduit'];
+            
+            if($pdo->ajouterProduit($ref, $desProduit, $qteStock, $prixProduit)){
+                
+                ajouterSucces("Le produit a bien été ajouté");
+                include("vues/v_succes.php");
+                include("vues/v_ajoutDeProduit.php");
+            }else{
+
+                ajouterErreur("Cette référence existe déjà");
+                include("vues/v_erreurs.php");
+                include("vues/v_ajoutDeProduit.php");
+
+            }
             break;
 
         }

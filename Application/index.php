@@ -41,6 +41,14 @@ switch($uc){
 		include("controleurs/c_gererProduit.php");
 		break;
 	}
+	case 'statistic' :{
+		include("controleurs/c_statistic.php");
+		break;
+	}
+	case 'gererDons' :{
+		include("controleurs/c_gererDons.php");
+		break;
+	}
 
 }
 include("vues/v_pied.php") ;

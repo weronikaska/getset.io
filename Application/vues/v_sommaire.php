@@ -32,7 +32,10 @@
            </li>
 
            <li class="smenu">
-              <a href="index.php?uc=gererProduit&action=formulaireAjout" title="ajouter un produit">enregistrement des dons </a>
+              <a href="index.php?uc=gererDons&action=ListeDesDons" title="enregistrement des dons">Gestion des dons </a>
+           </li>
+            <li class="smenu">
+              <a href="index.php?uc=statistic&action=statListeCommercants" title="Statistiques des commerçants"> Statistiques des commerçants</a>
            </li>
          </ul>
         
