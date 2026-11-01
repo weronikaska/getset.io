@@ -1,6 +1,5 @@
-<div class="titre-ajout">
-    <h2> Ajouter un produit </h2>
-</div>
+
+<h2> Ajouter un produit :</h2>
 
 <div class="formulaire-ajout">
     <form method="POST" action="index.php?uc=gererProduit&action=ajouterProduit">

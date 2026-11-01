@@ -207,29 +207,28 @@ class Modele{
  
  * 
 */
-
 	public function ListeDons(){ 
 		$pst = Modele::$monPdo->prepare("SELECT commerce.nom AS nom ,  donner.refProduit AS refProduit, donner.prixOrigine AS prix, qte , Commerce.ville AS ville,  donner.dateJour AS dateJour
 										FROM  commerce, donner 
-										WHERE commerce.id=donner.idCommerce
-										ORDER BY donner.dateJour DESC;"); //ne revoie pas le premier commercant 
+										LEFT JOIN commerce.id = donner.idCommerce
+										ORDER BY donner.dateJour DESC;"); // renvoie le premier commercant grace au left join moins contraignant que WHERE
 		
 		$pst->execute();
 		$lesLignes = $pst->fetchAll();
-		return $lesLignes; 
+		return $lesLignes;
 	}
 
+
 /**
- * Selection toute les info de la table commerce
- * permet d'afficher la liste deroulante 
+ * Selection toutes les info de la table commerce qui permet ensuite d'afficher la liste deroulante 
  
  *
 */
 	public function afficheComm(){
 		$req = "SELECT * FROM commerce;";
 		$stmt= Modele::$monPdo->query($req);
-		$lescomm = $stmt->fetchAll();
-		return $lescomm;
+		$lesComm = $stmt->fetchAll();
+		return $lesComm;
 	}
 
 
@@ -310,6 +309,25 @@ class Modele{
 		$lesLignes = $pst->fetchAll();
 		return $lesLignes; 
 	}
+	
+	
+/**
+ * Renvoie la liste des produits existant
+ *
+ *@return tout les produits sous la forme d'un tableau associatif
+*/
+	public function listeProduits() {
+		
+		$pst = Modele::$monPdo->prepare("SELECT * FROM produit;");
+		$pst->execute();
+		$lesLignes = $pst->fetchAll();
+		return $lesLignes;
+		
+	}
+	
+	
+	
+	
 /**
  * Ajouter le commerce dont les infos sont passées en arguments (version requetes préparés)
  

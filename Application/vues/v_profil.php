@@ -12,14 +12,13 @@
              </tr>
           
     <?php    
-
 			$nom = $leProfil['nom'];
 			$prenom = $leProfil['prenom'];
 			$login = $leProfil['login'];
 			$dateEmbauche = $leProfil['dateEmbauche'];
 	?>		
             <tr>
-                <td> <?php echo $nom ?></td>
+                <td><?php echo $nom ?></td>
                 <td><?php echo $prenom ?></td>
                 <td><?php echo $login ?></td>
 				<td><?php echo $dateEmbauche ?></td>
