@@ -6,7 +6,22 @@
       </div>  
         <ul id="menuList">
 			<li >
-				  Employé : <?php echo $_SESSION['prenom']."  ".$_SESSION['nom']  ?><br/ >
+			<?php 
+				if ($_SESSION['numRole'] == 3) {
+					echo "M./Mme. "; //Référence au maire 
+				}
+				else {
+					if ($_SESSION['numRole'] == 2) {
+						echo "Secrétaire : ";
+					}
+					else {
+						echo "Employé : ";
+					}
+				}
+				
+				echo $_SESSION['prenom']." ".$_SESSION['nom'] 
+			?>
+			<br/>
                <!--changer employée en variable qui change -->
             </li>
 			<li>------------------------------------------</li>
@@ -14,11 +29,8 @@
 			<li class="smenu">
               <a href="index.php?uc=profilEmploye&action=profil" title="Mon Profil">Mon Profil</a>
            </li>
-           <li class="smenu">
-              <a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">Se déconnecter</a>
-           </li>
 
-      <!-- dispo pour secrétaire -->
+      <!-- dispo pour secrétaire et employe lambda -->
            <li class="smenu">
               <a href="index.php?uc=listeCommerces&action=gererCommerces" title="Gestion des commerces">Gestion des commerces</a>
            </li>
@@ -26,18 +38,38 @@
               <a href="index.php?uc=listeAcheteurs&action=gererAcheteurs" title="Gestion des acheteurs">Gestion des acheteurs</a>
            </li>
 			
-   <!--vue sommaire du maire-->
-           <li class="smenu">
-              <a href="index.php?uc=gererProduit&action=consultationProduit" title="ajouter un produit">Ajouter un produit</a>
-           </li>
+   <!--vue sommaire du maire et secrétaire-->
+		<?php
+			if ($_SESSION['numRole'] == 3 || $_SESSION['numRole'] == 2) {
+		?>
+			<li class="smenu">
+				<a href="index.php?uc=gererProduit&action=formulaireAjout" title="Gestion des produits">Gestion des produits</a>
+			</li>
 
-           <li class="smenu">
-              <a href="index.php?uc=gererDons&action=ListeDesDons" title="enregistrement des dons">Gestion des dons </a>
+			<li class="smenu">
+				<a href="index.php?uc=gererDons&action=ListeDesDons" title="Gestion des dons">Gestion des dons</a>
+			</li>
+		   
+			<li class="smenu">
+				<a href="index.php?uc=statistic&action=statListeCommercants" title="Statistiques des commerçants">Statistiques des commerçants</a>
+			</li>
+			
+		<?php
+				if ($_SESSION['numRole'] == 2) {
+		?>
+			<li class="smenu">
+				<a href="index.php?uc=listeHabitants&action=gererHabitants" title="Gestion des Habitants">Gestion des habitants</a>
+			</li>
+		<?php
+				}
+			}
+		?>
+		 
+		<!-- deconnexion dispo pour tout les rôles -->
+		   <li class="smenu">
+              <a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">Se déconnecter</a>
            </li>
-            <li class="smenu">
-              <a href="index.php?uc=statistic&action=statListeCommercants" title="Statistiques des commerçants"> Statistiques des commerçants</a>
-           </li>
-         </ul>
+		</ul>
         
     </div>
     

@@ -19,10 +19,11 @@ switch($action){
 		}
 		else{
 			$employe = $pdo->getInfosEmploye($login,$mdp);
+			$numRole = $pdo->getNumRole($login);
 			$id = $employe['id'];
 			$nom =  $employe['nom'];
 			$prenom = $employe['prenom'];
-			connecter($id,$nom,$prenom);
+			connecter($id, $nom, $prenom, $numRole);
 			include("vues/v_sommaire.php");
 		}
 		break;

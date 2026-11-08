@@ -8,9 +8,11 @@ switch($action){
 		$leProfil = $pdo->getInfosEmployeById($idEmploye);
 		include("vues/v_profil.php");
 		break;
-		}
+	}
+	
 	case 'modification':{
 		include("vues/v_modificationMDP.php");
+		break;
 	}
 }
 ?>

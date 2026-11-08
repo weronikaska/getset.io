@@ -3,7 +3,7 @@ session_start();
 require_once("include/fonctions.php");
 require_once ("include/modele.php");
 
-include("vues/v_entete.php") ;
+include("vues/v_entete.php");
 
 
 
@@ -38,7 +38,7 @@ switch($uc){
 	}
 	
 	case 'gererProduit' :{
-		include("controleurs/c_gererProduit.php");
+		include("controleurs/c_gererProduits.php");
 		break;
 	}
 	case 'statistic' :{
@@ -47,6 +47,10 @@ switch($uc){
 	}
 	case 'gererDons' :{
 		include("controleurs/c_gererDons.php");
+		break;
+	}
+	case 'listeHabitants' :{
+		include("controleurs/c_gererHabitants.php");
 		break;
 	}
 
