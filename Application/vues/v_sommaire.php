@@ -28,7 +28,7 @@
 			
    <!--vue sommaire du maire-->
            <li class="smenu">
-              <a href="index.php?uc=gererProduit&action=formulaireAjout" title="ajouter un produit">Ajouter un produit</a>
+              <a href="index.php?uc=gererProduit&action=consultationProduit" title="ajouter un produit">Ajouter un produit</a>
            </li>
 
            <li class="smenu">

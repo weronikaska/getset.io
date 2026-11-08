@@ -6,6 +6,8 @@
     switch($action){
 
         case'ajouterProduit':{
+            $lesProduits = $pdo->listeProduits();
+            
             $ref = $_POST['refProduit'];
             $desProduit = $_POST['desProduit'];
             $qteStock = $_POST['qteStock'];

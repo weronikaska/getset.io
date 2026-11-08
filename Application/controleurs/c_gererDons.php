@@ -23,6 +23,12 @@ switch($action){
 
         $pdo->ajouterDon($id, $reference, $prixP, $qteS);
         ajouterSucces("Le don a bien été ajouté");
+
+        $lesLignes = $pdo->ListeDons();
+        $lescomm = $pdo->afficheComm();
+        $lesRefComm = $pdo->afficheProduit();
+
+        include("vues/v_consulterDons.php");
         include("vues/v_succes.php");
         include("vues/v_enregistrement_dons.php");
         break;

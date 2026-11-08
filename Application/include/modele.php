@@ -150,9 +150,16 @@ class Modele{
  * @return tous les champs sous la forme d'un tableau associatif 
 */
 	public function getLesAcheteurs(){
+
+		try{
+			$pst = Modele::$monPdo->prepare("select * from acheteur, habitant where habitant.idHabitant = acheteur.idHabitant and habitant.idFoyer = acheteur.idFoyer;");	
+			$pst->execute();
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
 		
-	    $pst = Modele::$monPdo->prepare("select * from acheteur, habitant where habitant.idHabitant = acheteur.idHabitant and habitant.idFoyer = acheteur.idFoyer;");	
-		$pst->execute();
+	    
 		
 		$lesLignes = $pst->fetchAll();
 		return $lesLignes; 
@@ -167,7 +174,7 @@ class Modele{
  * @param $qteStock
  * @param $prixProduit
 */
-
+//faire isset
 	public function ajouterProduit($ref, $desProduit, $qteStock, $prixProduit ){
 		$pst = Modele::$monPdo->prepare("SELECT COUNT(*) FROM produit WHERE reference = ?");
 		$pst->bindValue(1, $ref);
@@ -208,10 +215,10 @@ class Modele{
  * 
 */
 	public function ListeDons(){ 
-		$pst = Modele::$monPdo->prepare("SELECT commerce.nom AS nom ,  donner.refProduit AS refProduit, donner.prixOrigine AS prix, qte , Commerce.ville AS ville,  donner.dateJour AS dateJour
-										FROM  commerce, donner 
-										LEFT JOIN commerce.id = donner.idCommerce
-										ORDER BY donner.dateJour DESC;"); // renvoie le premier commercant grace au left join moins contraignant que WHERE
+		$pst = Modele::$monPdo->prepare("SELECT commerce.nom AS nom, donner.refProduit AS refProduit, donner.prixOrigine AS prix, donner.qte AS qte, commerce.ville AS ville, donner.dateJour AS dateJour
+										FROM commerce, donner
+										WHERE commerce.id = donner.idCommerce
+										ORDER BY donner.dateJour DESC"); 
 		
 		$pst->execute();
 		$lesLignes = $pst->fetchAll();
@@ -225,8 +232,14 @@ class Modele{
  *
 */
 	public function afficheComm(){
-		$req = "SELECT * FROM commerce;";
-		$stmt= Modele::$monPdo->query($req);
+		try{
+			$req = "SELECT * FROM commerce;";
+			$stmt= Modele::$monPdo->query($req);
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
 		$lesComm = $stmt->fetchAll();
 		return $lesComm;
 	}
@@ -240,8 +253,15 @@ class Modele{
  *
 */
 	public function afficheProduit(){
-		$req = "SELECT * FROM produit;";
-		$stmt= Modele::$monPdo->query($req);
+
+		try{
+			$req = "SELECT * FROM produit;";
+			$stmt= Modele::$monPdo->query($req);
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
 		$lesRefComm = $stmt->fetchAll();
 		return $lesRefComm;
 	}
@@ -258,7 +278,7 @@ class Modele{
 
 	public function ajouterDon($id, $reference, $prixP, $qteS){
 	
-	
+	//faire isset
 		$pst = Modele::$monPdo->prepare("INSERT INTO donner (idCommerce, refProduit, dateJour ,prixOrigine, qte) values (?, ?, NOW() ,?, ?)");
 		$pst->bindParam(1, $id);
 		$pst->bindParam(2, $reference);
@@ -266,6 +286,60 @@ class Modele{
 		$pst->bindParam(4, $qteS);
 		$pst->execute();
 
+	}
+
+
+
+	//faire isset
+	public function ajouterAcheteur($idFoyer, $idCivilite, $nom, $prenom, $dateNaiss, $mail, $telephone){
+		$rep = false;
+		
+		try{
+			//requete qui cherche l'idHanitant le plus grand dans la bdd et fait +1 pour le nouvel habitant
+			$pst = Modele::$monPdo->prepare("SELECT MAX(idHabitant) FROM habitant WHERE idFoyer = ?");
+			$pst->bindParam(1, $idFoyer);
+			$pst->execute();
+			$max = $pst->fetchColumn();
+
+			if($max == null){
+				$idHabitant = 1;  
+			}else{
+				$idHabitant = $max + 1;
+			}
+		}catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+
+		try{
+			//requete qui ajouter les info fournie dans le formulaire dans la bdd
+			$pst = Modele::$monPdo->prepare("INSERT INTO habitant (idHabitant, idFoyer, idCivilite, Nom, prenom, dateNaiss, mail, telephonePortable) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			$pst->bindParam(1, $idHabitant);
+			$pst->bindParam(2, $idFoyer);
+			$pst->bindParam(3, $idCivilite);
+			$pst->bindParam(4, $nom);
+			$pst->bindParam(5, $prenom);
+			$pst->bindParam(6, $dateNaiss);
+			$pst->bindParam(7, $mail);		
+			$pst->bindParam(8, $telephonePortable);
+			$pst->execute();
+
+		}catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+
+		try{
+			$pst = Modele::$monPdo->prepare("INSERT INTO acheteur (idHabitant, idFoyer) VALUES (?, ?)");
+			$pst->bindParam(1, $idHabitant);
+    		$pst->bindParam(2, $idFoyer);
+    		$pst->execute();
+
+			$rep = true;
+
+		}catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
+		return $rep;
 	}
 
 	
@@ -277,17 +351,23 @@ class Modele{
 */
 
 	public function statCommercantPlusProduit(){
-		$pst = Modele::$monPdo->prepare("SELECT habitant.nom, prenom COUNT(DISTINCT vendre.refProduit) AS nbProduit
-										FROM habitant, commercant, commerce, vendre
-										WHERE habitant.idHabitant=commercant.idHabitant
-										AND commerce.idCommerce=commercant.idCommerce
-										AND commerce.idCommerce=vendre.idCommerce
-										GROUP BY habitant.nom, prenom
-                                     	ORDER BY nbProduit DESC;");//requete qui bloque 
+		$pst = Modele::$monPdo->prepare("SELECT habitant.Nom AS nom, habitant.prenom AS prenom, COUNT(*) AS nbDons
+                                     	FROM habitant, commercant, donner
+										WHERE habitant.idHabitant = commercant.idHabitant
+										AND habitant.idFoyer = commercant.idFoyer
+										AND commercant.idCommerce = donner.idCommerce
+										GROUP BY commercant.id, habitant.Nom, habitant.prenom
+										HAVING nbDons >= ALL (
+											SELECT COUNT(*)
+											FROM commercant, donner
+											WHERE commercant.idCommerce = donner.idCommerce
+											GROUP BY commercant.id
+										)");//requete qui bloque  
+
+	
 		$pst->execute();
-		
-		$ligne = $pst->fetch();
-		return $ligne;
+		$lescommercants = $pst->fetchAll();
+		return $lescommercants; 
 	}
 	
 
@@ -297,14 +377,15 @@ class Modele{
  
  *
 */
-	public function statListeCommercant(){ 
-		$pst = Modele::$monPdo->prepare("SELECT habitant.nom AS nom , prenom , commerce.nom AS nomCommerce,  count(refProduit) AS nbProduit
+	public function statListeCommercant(){ //a changer car ne revoie pas les commerçant qui ont mit aucun produit en vente 
+		$pst = Modele::$monPdo->prepare("SELECT habitant.Nom AS nom, habitant.prenom AS prenom, commerce.nom AS nomCommerce, COUNT(DISTINCT vendre.refProduit) AS nbProduit
 										FROM habitant, commercant, commerce, vendre
-										WHERE habitant.idHabitant=commercant.idHabitant
-										AND commerce.id=commercant.idCommerce
-										AND commerce.id=vendre.idCommerce
-										GROUP BY nom, prenom , nomCommerce;");
-		
+										WHERE habitant.idHabitant = commercant.idHabitant
+										AND commerce.id = commercant.idCommerce	
+										AND habitant.idFoyer = commercant.idFoyer
+										AND commerce.id = vendre.idCommerce
+										GROUP BY commercant.id, habitant.Nom, habitant.prenom, commerce.nom");
+			
 		$pst->execute();
 		$lesLignes = $pst->fetchAll();
 		return $lesLignes; 
@@ -317,11 +398,80 @@ class Modele{
  *@return tout les produits sous la forme d'un tableau associatif
 */
 	public function listeProduits() {
+
+	try{
+			$pst = Modele::$monPdo->prepare("SELECT * FROM produit;");
+			$pst->execute();
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
 		
-		$pst = Modele::$monPdo->prepare("SELECT * FROM produit;");
-		$pst->execute();
+		
 		$lesLignes = $pst->fetchAll();
 		return $lesLignes;
+		
+	}
+
+	/**
+ * Renvoie la liste des foyer existant
+ *
+ *@return tout les foyer sous la forme d'un tableau associatif
+*/
+
+	public function listeAdAcheteur() {
+
+		try{
+			
+			$pst = Modele::$monPdo->prepare("SELECT * FROM foyer;");
+			$pst->execute();
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
+		$lesAddresses =$pst->fetchAll();
+		return $lesAddresses;
+		
+	}
+
+
+
+	public function listeCivilites() {
+
+		try{
+			
+			$pst = Modele::$monPdo->prepare("SELECT * FROM civilite;");
+			$pst->execute();
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
+		$lesCivillites =$pst->fetchAll();
+		return $lesCivillites;
+		
+	}
+
+
+/**
+ * Renvoie la liste des habitant existant
+ *
+ *@return tout les habitant sous la forme d'un tableau associatif
+*/
+
+	public function listeNomAcheteur() {
+
+		try{
+			$pst = Modele::$monPdo->prepare("SELECT * FROM habitant;");
+			$pst->execute();
+		}
+		catch(SQLException $e) {
+			echo "Erreur SQL :".htmlspecialchars($e->getMessage());
+		}
+		
+		$nomAcheteur = $pst->fetchAll();
+		return $nomAcheteur;
 		
 	}
 	
