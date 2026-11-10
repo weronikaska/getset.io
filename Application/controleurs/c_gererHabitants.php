@@ -27,6 +27,11 @@ switch($action){
 		include("vues/v_ajoutHabitant.php");
 		break;
 	}
+	case 'procedureValidation':{
+		
+		
+		
+	}
 }
 
 ?>

@@ -216,10 +216,15 @@ class Modele{
  
  * 
 */
-	public function ListeDons(){ 
-		$pst = Modele::$monPdo->prepare("SELECT commerce.nom AS nom ,  donner.refProduit AS refProduit, donner.prixOrigine AS prix, qte , Commerce.ville AS ville,  donner.dateJour AS dateJour
+	public function getListeDons(){ 
+		$pst = Modele::$monPdo->prepare("SELECT commerce.nom AS nom ,  
+												donner.refProduit AS refProduit, 
+												donner.prixOrigine AS prix, 
+												qte , 
+												Commerce.ville AS ville,  
+												donner.dateJour AS dateJour
 										FROM  commerce, donner 
-										LEFT JOIN commerce.id = donner.idCommerce
+										LEFT JOIN donner ON commerce.id = donner.idCommerce
 										ORDER BY donner.dateJour DESC;"); // renvoie le premier commercant grace au left join moins contraignant que WHERE
 		
 		$pst->execute();
@@ -504,6 +509,34 @@ class Modele{
 		
 		return $lesLignes;
 	}
+
+
+/**
+ * Retourne la liste des commerçants qui alimente le FPDF
+ *
+ *@return 
+*/
+	public function getListeCommercants() {
+		
+		$pst = Modele::$monPdo->prepare("SELECT commercant.id AS idCommercant,
+												habitant.nom AS nom,
+												habitant.prenom AS prenom,
+												commerce.nom AS nomCommerce,
+												commerce.rue AS rue,
+												commerce.codePostal AS codePostal,
+												commerce.ville AS ville
+										FROM commercant
+										INNER JOIN habitant ON commercant.idHabitant = habitant.idHabitant //INNER JOIN, permet la jointure et récupère uniquement les commerces avec un habitant correspondant 
+										INNER JOIN commerce ON commercant.idCommerce = commerce.id
+										ORDER BY habitant.nom ASC;");
+		
+		$pst->execute();
+		$lesLignes = $pst->fetchAll();
+		
+		return $lesLignes;
+	}
+
+
 
 }
 ?>

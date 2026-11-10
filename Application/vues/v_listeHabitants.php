@@ -42,10 +42,10 @@
 				<td><?php echo $dateValidation ?></td>
 				<td><?php echo $idEmployeValide ?></td>
 				
-                <!-- 
+                
 				<td><a href="index.php?uc=listeHabitants&action=procédureValidation&id= <?php echo $_SESSION['id']?>" 
-				onclick="return confirm('Voulez-vous vraiment valider cet habitant?');">Validation Habitant</a></td>
-				-->
+				onclick="return confirm('Confirmez vous que cet habitant <?php echo $nom ?> a bien fait part des pièces requises pour être validé ?');">Validation Habitant</a></td>
+				
              </tr>
 	<?php		 
         }

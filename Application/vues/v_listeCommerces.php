@@ -11,8 +11,7 @@
              </tr>
           
     <?php    
-	    foreach($lesCommerces as $unCommerce) 
-		{
+	    foreach($lesCommerces as $unCommerce){
 			$id = $unCommerce['id'];
 			$nom = $unCommerce['nom'];
 			$rue = $unCommerce['rue'];
@@ -27,10 +26,16 @@
 				<td><?php echo $ville ?></td>
                 <td><a href="index.php?uc=listeCommerces&action=supprimerCommerce&id=<?php echo $id?>" 
 				onclick="return confirm('Voulez-vous vraiment supprimer ce commerce?');">Supprimer ce commerce</a></td>
-             </tr>
+            </tr>
+			<?php
+				if ($_SESSION['numRole'] == 2) {
+			?>
+			<a href="index.php?uc=gererDons&action=telechargerPDF">
+				Télécharger la liste des commerçants (PDF)
+			</a>
 	<?php		 
-          
-          }
+				}
+        }
 	?>	  
                                           
     
