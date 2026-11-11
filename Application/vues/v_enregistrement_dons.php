@@ -51,4 +51,16 @@
      <input type="submit" value="ajoute le don" name="ajouterDon"/>
 
 </form>
+
+
+    <?php
+            if ($_SESSION['numRole'] == 3) {
+        ?>
+        <a href="index.php?uc=gererDons&action=telechargerPDF">
+            Télécharger la liste des dons (PDF)
+        </a>
+
+    <?php 
+         }
+    ?>
 </div>

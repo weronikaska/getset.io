@@ -23,13 +23,24 @@
                     ajouterErreur("Ancien mot de passe incorrect");
                     include("vues/v_erreurs.php");
                     include("vues/v_modificationMDP.php");
-                }
-            else{
+                }else{
                 //fonction qui UPDATE le mot de passe
-                $modifier = $pdo->UpdateMdp($idEmploye, $nouveau_mdp);
-                ajouterSucces("Votre mot de passe a bien été modifié.");
-                include("vues/v_succes.php");
-                include("vues/v_modificationMDP.php");
+
+                if($pdo->UpdateMdp($idEmploye, $nouveau_mdp)){
+			
+                    ajouterSucces("Votre mot de passe a bien été modifié.");
+                    include("vues/v_succes.php");
+                    include("vues/v_modificationMDP.php");
+                }else{
+
+                   
+                    ajouterErreur("Erreur lors du changement de mot de passe.");
+
+                    include("vues/v_listeAcheteurs.php");
+                   include("vues/v_modificationMDP.php");
+                    
+
+                }
             }
             break;
         }

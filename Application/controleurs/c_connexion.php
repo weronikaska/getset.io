@@ -1,4 +1,4 @@
-﻿<?php
+﻿﻿<?php
 if(!isset($_REQUEST['action'])){
 	$_REQUEST['action'] = 'demandeConnexion';
 }

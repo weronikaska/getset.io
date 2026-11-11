@@ -30,6 +30,7 @@ function connecter($id,$nom,$prenom,$numRole){
 	$_SESSION['numRole'] = $numRole;
 }
 
+
 /**
  * Détruit la session active
  */

@@ -1,5 +1,5 @@
 <?php
-include("vues/v_sommaire.php");
+//include("vues/v_sommaire.php");
 $idEmploye = $_SESSION['idEmploye'];
 
 $action = $_REQUEST['action'];
@@ -18,10 +18,29 @@ switch($action){
 	}
 	case 'supprimerCommerce':{
 		$idCommerce= $_REQUEST['id'];
-		$pdo->supprimerCommerce($idCommerce);
-		$lesCommerces = $pdo->getLesCommerces();
-		include("vues/v_listeCommerces.php");
-		include("vues/v_ajoutCommerce.php");
+
+		if($pdo->supprimerCommerce($idCommerce)){
+
+           $lesCommerces = $pdo->getLesCommerces();
+            
+            ajouterSucces("Le commerce a bien été supprimé.");
+
+            
+            include("vues/v_succes.php");
+			include("vues/v_listeCommerces.php");
+			include("vues/v_ajoutCommerce.php");
+        }else{
+
+            $lesCommerces = $pdo->getLesCommerces();
+
+            ajouterErreur("Erreur lors de la suppression.");
+
+			include("vues/v_erreurs.php");
+			include("vues/v_listeCommerces.php");
+			include("vues/v_ajoutCommerce.php");
+            
+
+        }
 	  break;
 	}
 	case 'ajouterUnCommerce':{
@@ -29,11 +48,28 @@ switch($action){
 		$rue = $_REQUEST['rue'];
 		$cp = $_REQUEST['cp'];
 		$ville = $_REQUEST['ville'];
-		$pdo->ajouterUnCommerce($nom, $rue, $cp, $ville);
-		$lesCommerces = $pdo->getLesCommerces();
-		include("vues/v_listeCommerces.php");
-		include("vues/v_ajoutCommerce.php");
-		break;
+
+		if($pdo->ajouterUnCommerce($nom, $rue, $cp, $ville)){
+
+			$lesCommerces = $pdo->getLesCommerces();
+
+            
+            ajouterSucces("Le commerce a bien été ajouté");
+
+            include("vues/v_listeCommerces.php");
+            include("vues/v_succes.php");
+			include("vues/v_ajoutCommerce.php");
+        }else{
+            $lesCommerces = $pdo->getLesCommerces();
+
+            ajouterErreur("Tous les champs n'ont pas été remplis.");
+
+			include("vues/v_listeCommerces.php"); 
+			include("vues/v_erreurs.php");
+            include("vues/v_ajoutCommerce.php");
+
+        }
+        break;
 	}
 	case 'telechargerPDF': {
 		$lesCommercants = $pdo->ListeCommercants();
@@ -82,6 +118,9 @@ switch($action){
 		
 	}	
 
+
+
 }
+
 
 ?>

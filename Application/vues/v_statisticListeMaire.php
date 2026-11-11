@@ -14,6 +14,7 @@
 			$prenom = $ligne['prenom'];
 			$nomCommerce=$ligne['nomCommerce'];
 			$nbProduit= $ligne['nbProduit'];
+		
 	?>		
             <tr>
                 <td><?php echo $nom ?></td>
@@ -23,5 +24,7 @@
              </tr>
 	<?php		 
 		}
-	?>	  
+	?>	
+	
+	
 </table>

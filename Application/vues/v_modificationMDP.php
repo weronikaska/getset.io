@@ -1,6 +1,7 @@
 <div id = "contenu">
 	
-		<h2>Modification du mots de passe </h2>
+      <h2>Modification du mots de passe </h2>
+
 
 	<form method="POST" action="index.php?uc=modificationMDP&action=modificationDuMDP">
    

@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 <table class="listeLegere">
   	   <caption>Liste des commerces enregistrés </caption>
              <tr>
@@ -41,5 +41,4 @@
     
 
   </table>
-  
 

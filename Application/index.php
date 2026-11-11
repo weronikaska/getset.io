@@ -1,7 +1,9 @@
 <?php
+ob_start();
 session_start();
 require_once("include/fonctions.php");
 require_once ("include/modele.php");
+
 
 $pdo = Modele::getModele();
 $estConnecte = estConnecte();
@@ -23,8 +25,15 @@ if ($uc == 'listeCommerces' && isset($_REQUEST['action']) && $_REQUEST['action']
     exit; // usage de 'exit' et pas 'break' car pas dans un switch
 }	
 
-include("vues/v_entete.php");
 
+if ($uc == 'gererDons' && isset($_REQUEST['action']) && $_REQUEST['action'] == 'telechargerPDF') {
+    include("controleurs/c_gererDons.php");
+    exit;
+}	
+
+include("vues/v_entete.php") ;
+ 
+$uc = $_REQUEST['uc'];
 switch($uc){
 	case 'connexion':{
 		include("controleurs/c_connexion.php");
@@ -48,7 +57,7 @@ switch($uc){
 	}
 	
 	case 'gererProduit' :{
-		include("controleurs/c_gererProduits.php");
+		include("controleurs/c_gererProduit.php");
 		break;
 	}
 	case 'statistic' :{

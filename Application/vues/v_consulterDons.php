@@ -27,8 +27,12 @@
 				<td><?php echo $prix ?></td>
                 <td><?php echo $qte ?></td>
              </tr>
-	<?php		 
 
+            
+			 
+		  
+	<?php		 
+                
               
           }
 	?>	  

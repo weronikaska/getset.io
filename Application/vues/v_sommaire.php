@@ -1,4 +1,4 @@
-﻿    <!-- Division pour le sommaire -->
+﻿ <!-- Division pour le sommaire -->
     <div id="menuGauche">
      <div id="infosUtil">
     
@@ -43,7 +43,7 @@
 			if ($_SESSION['numRole'] == 3 || $_SESSION['numRole'] == 2) {
 		?>
 			<li class="smenu">
-				<a href="index.php?uc=gererProduit&action=formulaireAjout" title="Gestion des produits">Gestion des produits</a>
+				<a href="index.php?uc=gererProduit&action=consultationProduit" title="Gestion des produits">Gestion des produits</a>
 			</li>
 
 			<li class="smenu">

@@ -260,7 +260,7 @@ taille de caractères légèrement sup rieure  à la normale */
 }
 
 .succes {
-    background-color: rgb(237, 210, 229);
+    background-color: rgb(187, 233, 183);
     color: rgb(28, 203, 40);
     font-size: 1.1em;
     width: 95%;
@@ -408,4 +408,29 @@ div #piedPage {
     text-align: center;
     position: fixed;
     bottom: 0;
+}
+
+
+/*---------------------------les stats du maire----------------------*/
+
+.stats {
+    background-color: #fff;
+    padding: 1em 1.5em;
+    margin: 1em 3% 1em 18%;
+}
+
+.stats table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.stats th {
+    background-color: #77AADD;
+    text-align: left;
+    padding: 0.5em;
+}
+
+.stats td {
+    padding: 0.5em;
+    border-bottom: 1px solid #ccc;
 }

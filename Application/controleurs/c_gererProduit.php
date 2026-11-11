@@ -7,7 +7,7 @@
 
         case'ajouterProduit':{
             $lesProduits = $pdo->listeProduits();
-            
+
             $ref = $_POST['refProduit'];
             $desProduit = $_POST['desProduit'];
             $qteStock = $_POST['qteStock'];
@@ -20,11 +20,11 @@
 				include("vues/v_listeProduits.php");
                 include("vues/v_ajoutDeProduit.php");
             }
-			else{
+			else{//message d'erreur 
 
-                ajouterErreur("Cette référence existe déjà");
-				include("vues/v_erreurs.php");
+                ajouterErreur("Tous les champs n'ont pas été remplis.");
 				include("vues/v_listeProduits.php");
+                include("vues/v_erreurs.php");
                 include("vues/v_ajoutDeProduit.php");
             }
             break;
