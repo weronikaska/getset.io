@@ -27,6 +27,7 @@ class Modele{
  */				
 	private function __construct(){
     	Modele::$monPdo = new PDO(Modele::$serveur.';'.Modele::$bdd, Modele::$user, Modele::$mdp); 
+		Modele::$monPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		Modele::$monPdo->query("SET CHARACTER SET utf8");
 	}
 	public function __destruct(){
@@ -647,16 +648,35 @@ public function ajouterAcheteur($idHabitant, $idFoyer){		$rep = false;
  *
 */
 	public function ajouterHabitant($idCivilite, $idFoyer, $nom, $prenom, $dateNaissance, $mail, $telephonePort) {
-
-		$pst = Modele::$monPdo->prepare("INSERT INTO habitant(idFoyer, idCivilite, Nom, prenom, dateNaiss, mail, telephonePortable) VALUES (?, ?, ?, ?, ?, ?, ?);");
-		$pst->bindParam(1, $idFoyer);
-		$pst->bindParam(2, $idCivilite);
-		$pst->bindParam(3, $nom);
-		$pst->bindParam(4, $prenom);
-		$pst->bindParam(5, $dateNaissance);
-		$pst->bindParam(6, $mail);
-		$pst->bindParam(7, $telephonePort);
-		$pst->execute();
+		
+		
+		try{
+			$pst = Modele::$monPdo->prepare("SELECT MAX(idHabitant) FROM habitant WHERE idFoyer = ?;");
+			$pst->bindValue(1, $idFoyer);
+			$pst->execute();
+			$max = $pst->fetchColumn();
+			
+			if ($max == null) { 
+				$idHabitant = 1;
+			}
+			else{
+				$idHabitant = $max + 1;
+			}
+		
+			$pst = Modele::$monPdo->prepare("INSERT INTO habitant(idHabitant, idCivilite, idFoyer, Nom, prenom, dateNaiss, mail, telephonePortable) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+			$pst->bindParam(1, $idHabitant);
+			$pst->bindParam(2, $idCivilite);
+			$pst->bindParam(3, $idFoyer);
+			$pst->bindParam(4, $nom);
+			$pst->bindParam(5, $prenom);
+			$pst->bindParam(6, $dateNaissance);
+			$pst->bindParam(7, $mail);
+			$pst->bindParam(8, $telephonePort);
+			$pst->execute();
+		} 
+		catch (PDOException $e) {
+			throw $e; // permet d'éviter d'appraitre comme succès si fail
+		}
 		
 	}
 
@@ -692,26 +712,129 @@ public function ajouterAcheteur($idHabitant, $idFoyer){		$rep = false;
 		return $lesLignes;
 	}
 
-	/**
+/**
  * Retourne la liste des commerçants qui alimente le FPDF
  *
  *@return 
 */
 	public function getListeCommercants() {
 		
+		//INNER JOIN, permet la jointure et récupère uniquement les commerces avec un habitant correspondant 
 		$pst = Modele::$monPdo->prepare("SELECT commercant.id AS idCommercant,
-												habitant.nom AS nom,
-												habitant.prenom AS prenom,
-												commerce.nom AS nomCommerce,
-												commerce.rue AS rue,
-												commerce.codePostal AS codePostal,
-												commerce.ville AS ville
+                                        habitant.nom AS nom,
+                                        habitant.prenom AS prenom,
+                                        commerce.nom AS nomCommerce,
+                                        commerce.rue AS rue,
+                                        commerce.codePostal AS codePostal,
+                                        commerce.ville AS ville
 										FROM commercant
-										INNER JOIN habitant ON commercant.idHabitant = habitant.idHabitant //INNER JOIN, permet la jointure et récupère uniquement les commerces avec un habitant correspondant 
+										INNER JOIN habitant ON commercant.idHabitant = habitant.idHabitant
+                                        AND commercant.idFoyer = habitant.idFoyer
 										INNER JOIN commerce ON commercant.idCommerce = commerce.id
-										ORDER BY habitant.nom ASC;");
+										ORDER BY habitant.nom ASC");
 		
 		$pst->execute();
+		$lesLignes = $pst->fetchAll();
+		
+		return $lesLignes;
+	}
+
+
+
+/*
+ * Modifie le prix d'un produit rentré par l'utilisateur
+ *
+ * @param String $reference
+ * @param float $prix
+ * 
+ *@return true si la requete réussi
+*/
+	public function modificationPrixProduit($reference, $prix) {
+		
+		$pst = Modele::$monPdo->prepare("UPDATE produit SET prix = ? WHERE reference = ?;");
+		$pst->bindParam(1, $prix);
+		$pst->bindParam(2, $reference);
+		
+		return $pst->execute();
+	
+	}
+	
+	
+/*
+ * Permet la validation d'un habitant, si la validation est faite, ciValide affiichera 1 et les informations de l'employé ayant effectué la validation  
+ *
+ * @return $res, elle renvoie true si il a été validé (sinon false si non existant ou déjà validé)
+ *
+*/
+
+	public function validerHabitant($idHabitant, $idFoyer, $idEmploye) {
+		
+		$pst = Modele::$monPdo->prepare("UPDATE habitant SET ciValide = 1, dateValidation = CURDATE(), idEmployeValidation = ?
+										 WHERE idHabitant = ? AND idFoyer = ? AND ciValide = 0;");
+		
+		$pst->bindParam(1, $idEmploye);
+		$pst->bindParam(2, $idHabitant);
+		$pst->bindParam(3, $idFoyer);
+		$pst->execute();
+		
+		if ($pst->rowCount() > 0) {
+			$res = true;
+		}
+		else{
+			$res = false;
+		}
+		
+		return $res;
+	
+	}
+
+/*
+ * Permet de renvoyer la liste des 3 produits les plus achetés 
+ *
+ *
+ *@return une liste de 3 produits 
+*/
+	
+	public function statTop3Produits() {
+		
+		$i = 0;
+		
+		$pst = Modele::$monPdo->prepare("SELECT refProduit, COUNT(*) AS nbAchats
+										 FROM acheter
+										 GROUP BY refProduit
+										 ORDER BY nbAchats DESC;");
+		
+		$pst->execute();
+		
+		$lesLignes = array();
+		
+		while ($i < 3 && $ligne = $pst->fetch()) {
+			$lesLignes[] = $ligne;
+			$i++;
+		}
+		
+		return $lesLignes;
+	
+	}
+
+
+
+/*
+ * Permet de donné la liste de tout les produits et de leur vente 
+ *
+ *
+ *@return la liste des produits selon leur nombre d'achats en ordre decroissant 
+*/
+	public function statListeProduitsAchetes() {
+    
+		$pst = Modele::$monPdo->prepare("SELECT p.reference, COUNT(a.idArticle) AS nbAchats
+										 FROM produit p
+										 LEFT JOIN acheter a ON p.reference = a.refProduit
+										 GROUP BY p.reference
+										 ORDER BY nbAchats DESC;");
+		
+		$pst->execute();
+		
 		$lesLignes = $pst->fetchAll();
 		
 		return $lesLignes;

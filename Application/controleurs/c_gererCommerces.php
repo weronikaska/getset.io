@@ -17,7 +17,7 @@ switch($action){
 		break;
 	}
 	case 'supprimerCommerce':{
-		$idCommerce= $_REQUEST['id'];
+		$idCommerce = $_REQUEST['id'];
 
 		if($pdo->supprimerCommerce($idCommerce)){
 
@@ -29,7 +29,8 @@ switch($action){
             include("vues/v_succes.php");
 			include("vues/v_listeCommerces.php");
 			include("vues/v_ajoutCommerce.php");
-        }else{
+        }
+		else{
 
             $lesCommerces = $pdo->getLesCommerces();
 
@@ -38,10 +39,8 @@ switch($action){
 			include("vues/v_erreurs.php");
 			include("vues/v_listeCommerces.php");
 			include("vues/v_ajoutCommerce.php");
-            
-
         }
-	  break;
+		break;
 	}
 	case 'ajouterUnCommerce':{
 		$nom = $_REQUEST['nom'];
@@ -72,16 +71,16 @@ switch($action){
         break;
 	}
 	case 'telechargerPDF': {
-		$lesCommercants = $pdo->ListeCommercants();
+		$lesCommercants = $pdo->getListeCommercants();
 		
 		require_once("fpdf/fpdf.php");
 		
-		$pdf = new FDPF();
+		$pdf = new FPDF();
 		$pdf->AddPage();
 		
 		// TITRE DU FPDF
-		$pdf->SetFont("Arial", "B", 16);
-		$pdf->Cell(190, 10, utf8_decode("Liste des commerçants"), 0, 1, "C");
+		$pdf->SetFont("Arial", "B", 10);
+		$pdf->Cell(190, 10, iconv('UTF-8', 'windows-1252//TRANSLIT', "Liste des commerçants"), 0, 1, "C");
 		
 		$pdf->Ln(10);
 		
@@ -114,6 +113,7 @@ switch($action){
 		}
 		
 		// TELECHARGE LE FPDF
+		ob_clean();
 		$pdf->Output('D', 'liste_commercants.pdf');
 		
 	}	

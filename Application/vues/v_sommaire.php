@@ -60,6 +60,12 @@
 			<li class="smenu">
 				<a href="index.php?uc=listeHabitants&action=gererHabitants" title="Gestion des Habitants">Gestion des habitants</a>
 			</li>
+			
+			<li class="smenu">
+				<a href="index.php?uc=statistic&action=statProduits" title="Statistiques des produits" >
+					Statistiques des produits
+				</a>
+			</li>
 		<?php
 				}
 			}

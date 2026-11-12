@@ -28,6 +28,7 @@
 			$civiliteValide = $unHabitant['ciValide'];
 			$dateValidation = $unHabitant['dateValidation'];
 			$idEmployeValide = $unHabitant['idEmployeValidation'];
+			$idCiviValidation = $unHabitant['ciValide'];
 	?>		
             <tr>
 			    <td> <?php echo $idHabitant ?></td>
@@ -42,9 +43,20 @@
 				<td><?php echo $dateValidation ?></td>
 				<td><?php echo $idEmployeValide ?></td>
 				
-                
-				<td><a href="index.php?uc=listeHabitants&action=procédureValidation&id= <?php echo $_SESSION['id']?>" 
-				onclick="return confirm('Confirmez vous que cet habitant <?php echo $nom ?> a bien fait part des pièces requises pour être validé ?');">Validation Habitant</a></td>
+                <?php 
+					if ($idCiviValidation == 0) {
+				?>
+						<td><a href="index.php?uc=listeHabitants&action=procedureValidation&id=<?php echo $idHabitant ?>&idFoyer=<?php echo $idFoyer ?>" 
+						onclick="return confirm('Confirmez vous que cet habitant <?php echo $nom ?> a bien fait part des pièces requises pour être validé ?');">Validation Habitant</a></td>
+				<?php 
+					} 
+					else { 
+				?>
+				<td> </td>
+				<?php 
+					}
+				?>
+				
 				
              </tr>
 	<?php		 

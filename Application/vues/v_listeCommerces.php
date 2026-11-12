@@ -27,18 +27,16 @@
                 <td><a href="index.php?uc=listeCommerces&action=supprimerCommerce&id=<?php echo $id?>" 
 				onclick="return confirm('Voulez-vous vraiment supprimer ce commerce?');">Supprimer ce commerce</a></td>
             </tr>
-			<?php
-				if ($_SESSION['numRole'] == 2) {
-			?>
-			<a href="index.php?uc=gererDons&action=telechargerPDF">
-				Télécharger la liste des commerçants (PDF)
-			</a>
-	<?php		 
-				}
+	<?php		
         }
 	?>	  
-                                          
-    
-
-  </table>
-
+	</table>
+  	<?php
+		if ($_SESSION['numRole'] == 2) {
+	?>
+		<a href="index.php?uc=listeCommerces&action=telechargerPDF">
+			Télécharger la liste des commerçants (PDF)
+		</a>
+	<?php 
+		}
+	?>

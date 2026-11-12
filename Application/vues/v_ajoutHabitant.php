@@ -44,9 +44,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Date de Naissance : </td>
+			<td>Date de Naissance (YYYY-MM-DD): </td>
 			<td>
-				<input  type='text' name ="dateNaiss"  size='5' maxlength='10' required>
+				<input  type='text' name ="dateNaiss"  size='10' maxlength='10' required>
 			</td>
 		</tr>
 		<tr>

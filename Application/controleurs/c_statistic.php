@@ -14,7 +14,20 @@ switch($action){
 		break;
 	}
 	
-	
-    
+	case 'statProduits':{
+
+		if ($_SESSION['idEmploye'] == 2) {
+
+			$lesTopProduits = $pdo->statTop3Produits();
+			$lesProduits = $pdo->statListeProduitsAchetes();
+
+			include("vues/v_statisticProduits.php");
+		}
+		else {
+			ajouterErreur("Accès réservé au secrétaire.");
+			include("vues/v_erreurs.php");
+		}
+		break;
+	}
 	
 }

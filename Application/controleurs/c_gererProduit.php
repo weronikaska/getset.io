@@ -37,6 +37,25 @@
 			include("vues/v_ajoutDeProduit.php");
 			break;
 		}
+		
+		case 'modifierPrix':{
+			$ref = $_POST['refProduit'];
+			$nouveauPrix = $_POST['nouveauPrix'];
+
+			if (is_numeric($nouveauPrix) && $nouveauPrix >= 0 && $pdo->modificationPrixProduit($ref, $nouveauPrix)) {
+				ajouterSucces("Le prix du produit a bien été modifié.");
+				$lesProduits = $pdo->listeProduits();
+				include("vues/v_succes.php");
+			}
+			else {
+				ajouterErreur("Le prix n'a pas pu être modifié (valeur invalide).");
+				$lesProduits = $pdo->listeProduits();
+				include("vues/v_erreurs.php");
+			}
+			include("vues/v_listeProduits.php");
+			include("vues/v_ajoutDeProduit.php");
+			break;
+		}
     }
 
 ?>
